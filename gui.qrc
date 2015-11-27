@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+  <file>logo.png</file>
+  <file>vs.glsl</file>
+  <file>fractal-fs.glsl</file>
+  <file>coloring-fs.glsl</file>
+</qresource>
+</RCC>
