@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015  Martin Lambers <marlam@marlam.de>
+ * Copyright (C) 2015, 2016  Martin Lambers <marlam@marlam.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,8 +35,7 @@ static void float128_to_pair(__float128 x, T* p0, T* p1)
     *p1 = x - *p0;
 }
 
-GLWidget::GLWidget() : QOpenGLWidget(), QOpenGLFunctions_3_3_Core(),
-    have_arb_gpu_shader_fp64(false), have_arb_gpu_shader5(false),
+GLWidget::GLWidget() : QOpenGLWidget(), QOpenGLFunctions_4_0_Core(),
     _state(),
     _mandelbrot_power(-1), _mandelbrot_max_iter(-1), _mandelbrot_bailout(-1.0f), _mandelbrot_smooth(false),
     _precision_type(precision_native_float),
@@ -62,10 +61,6 @@ int GLWidget::heightForWidth(int w) const
 void GLWidget::initializeGL()
 {
     initializeOpenGLFunctions();
-    have_arb_gpu_shader_fp64 = context()->hasExtension("GL_ARB_gpu_shader_fp64");
-    have_arb_gpu_shader5 = context()->hasExtension("GL_ARB_gpu_shader5");
-    glUniform1d = reinterpret_cast<void (*)(GLint, GLdouble)>(context()->getProcAddress("glUniform1d"));
-    glUniform2d = reinterpret_cast<void (*)(GLint, GLdouble, GLdouble)>(context()->getProcAddress("glUniform2d"));
 
     const float p[] = {
         -1.0f, +1.0f, 0.0f,
@@ -175,7 +170,6 @@ void GLWidget::paintGL()
         file.open(QIODevice::ReadOnly);
         QTextStream ts(&file);
         QString fs_src = ts.readAll();
-        fs_src.replace("HAVE_ARB_GPU_SHADER5", have_arb_gpu_shader5 ? "1" : "0");
         fs_src.replace("FLOAT_TYPE", QString::number(_precision_type));
         fs_src.replace("MANDELBROT_POWER", QString::number(_mandelbrot_power));
         fs_src.replace("MANDELBROT_LN_POWER", QString::number(std::log(static_cast<float>(_mandelbrot_power))));

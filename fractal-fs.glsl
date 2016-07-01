@@ -1,7 +1,7 @@
-#version 330
+#version 400
 
 /*
- * Copyright (C) 2015  Martin Lambers <marlam@marlam.de>
+ * Copyright (C) 2015, 2016  Martin Lambers <marlam@marlam.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-#if HAVE_ARB_GPU_SHADER5
-# extension GL_ARB_gpu_shader5 : require
-# define PRECISE precise
-#else
-# define PRECISE
-#endif
 
 /*
  *
@@ -50,7 +43,6 @@
 # define FLOAT float
 # define FLOAT_EMU 0
 #elif (FLOAT_TYPE == 1)
-# extension GL_ARB_gpu_shader_fp64 : require
 # define FLOAT double
 # define FLOAT_EMU 0
 #elif (FLOAT_TYPE == 2)
@@ -61,7 +53,6 @@
 # define BASEVEC4 vec4
 const float SPLIT = 4097.0; // (1 << 12) + 1;
 #elif (FLOAT_TYPE == 3)
-# extension GL_ARB_gpu_shader_fp64 : require
 # define FLOAT dvec2
 # define FLOAT_EMU 1 
 # define BASEFLOAT double
@@ -77,70 +68,70 @@ const double SPLIT = 134217729.0LF; // (1 << 27) + 1;
 
 BASEVEC2 two_add(BASEFLOAT a, BASEFLOAT b)
 {
-    PRECISE BASEFLOAT s = a + b;
-    PRECISE BASEFLOAT v = s - a;
-    PRECISE BASEFLOAT e = (a - (s - v)) + (b - v);
+    precise BASEFLOAT s = a + b;
+    precise BASEFLOAT v = s - a;
+    precise BASEFLOAT e = (a - (s - v)) + (b - v);
     return BASEVEC2(s, e);
 }
 BASEVEC2 quick_two_add(BASEFLOAT a, BASEFLOAT b) // requires abs(a) >= abs(b)
 {
-    PRECISE BASEFLOAT s = a + b;
-    PRECISE BASEFLOAT e = b - (s - a);
+    precise BASEFLOAT s = a + b;
+    precise BASEFLOAT e = b - (s - a);
     return BASEVEC2(s, e);
 }
 BASEVEC4 two_add_comp(BASEVEC2 a, BASEVEC2 b)
 {
-    PRECISE BASEVEC2 s = a + b;
-    PRECISE BASEVEC2 v = s - a;
-    PRECISE BASEVEC2 e = (a - (s - v)) + (b - v);
+    precise BASEVEC2 s = a + b;
+    precise BASEVEC2 v = s - a;
+    precise BASEVEC2 e = (a - (s - v)) + (b - v);
     return BASEVEC4(s.x, e.x, s.y, e.y);
 }
 BASEVEC4 two_sub_comp(BASEVEC2 a, BASEVEC2 b)
 {
-    PRECISE BASEVEC2 s = a - b;
-    PRECISE BASEVEC2 v = s - a;
-    PRECISE BASEVEC2 e = (a - (s - v)) - (b + v);
+    precise BASEVEC2 s = a - b;
+    precise BASEVEC2 v = s - a;
+    precise BASEVEC2 e = (a - (s - v)) - (b + v);
     return BASEVEC4(s.x, e.x, s.y, e.y);
 }
 BASEVEC2 split(BASEFLOAT a)
 {
-    PRECISE BASEFLOAT t = SPLIT * a;
-    PRECISE BASEFLOAT b_hi = t - (t - a);
-    PRECISE BASEFLOAT b_lo = a - b_hi;
+    precise BASEFLOAT t = SPLIT * a;
+    precise BASEFLOAT b_hi = t - (t - a);
+    precise BASEFLOAT b_lo = a - b_hi;
     return BASEVEC2(b_hi, b_lo);
 }
 BASEVEC4 split_comp(BASEVEC2 a)
 {
-    PRECISE BASEVEC2 t = SPLIT * a;
-    PRECISE BASEVEC2 b_hi = t - (t - a);
-    PRECISE BASEVEC2 b_lo = a - b_hi;
+    precise BASEVEC2 t = SPLIT * a;
+    precise BASEVEC2 b_hi = t - (t - a);
+    precise BASEVEC2 b_lo = a - b_hi;
     return BASEVEC4(b_hi.x, b_lo.x, b_hi.y, b_lo.y);
 }
 BASEVEC2 two_mul(BASEVEC2 ab)
 {
-    PRECISE BASEFLOAT p = ab.x * ab.y;
-    PRECISE BASEVEC4 s = split_comp(ab);
-    PRECISE BASEFLOAT e = ((s.x * s.z - p) + s.x * s.w + s.y * s.z) + s.y * s.w;
+    precise BASEFLOAT p = ab.x * ab.y;
+    precise BASEVEC4 s = split_comp(ab);
+    precise BASEFLOAT e = ((s.x * s.z - p) + s.x * s.w + s.y * s.z) + s.y * s.w;
     return BASEVEC2(p, e);
 }
 BASEVEC2 two_sqr(BASEFLOAT a)
 {
-    PRECISE BASEFLOAT p = a * a;
-    PRECISE BASEVEC2 s = split(a);
-    PRECISE BASEFLOAT e = ((s.x * s.x - p) + BASEFLOAT(2) * s.x * s.y) + s.y * s.y;
+    precise BASEFLOAT p = a * a;
+    precise BASEVEC2 s = split(a);
+    precise BASEFLOAT e = ((s.x * s.x - p) + BASEFLOAT(2) * s.x * s.y) + s.y * s.y;
     return BASEVEC2(p, e);
 }
 
 BASEVEC2 emu_add(BASEVEC2 a, BASEFLOAT b)
 {
-    PRECISE BASEVEC2 s = two_add(a.x, b);
+    precise BASEVEC2 s = two_add(a.x, b);
     s.y += a.y;
-    PRECISE BASEVEC2 r = quick_two_add(s.x, s.y);
+    precise BASEVEC2 r = quick_two_add(s.x, s.y);
     return r;
 }
 BASEVEC2 emu_add(BASEVEC2 a, BASEVEC2 b)
 {
-    PRECISE BASEVEC4 st = two_add_comp(a, b);
+    precise BASEVEC4 st = two_add_comp(a, b);
     st.y += st.z;
     st.xy = quick_two_add(st.x, st.y);
     st.y += st.w;
@@ -149,7 +140,7 @@ BASEVEC2 emu_add(BASEVEC2 a, BASEVEC2 b)
 }
 BASEVEC2 emu_sub(BASEVEC2 a, BASEVEC2 b)
 {
-    PRECISE BASEVEC4 st = two_sub_comp(a, b);
+    precise BASEVEC4 st = two_sub_comp(a, b);
     st.y += st.z;
     st.xy = quick_two_add(st.x, st.y);
     st.y += st.w;
@@ -158,48 +149,48 @@ BASEVEC2 emu_sub(BASEVEC2 a, BASEVEC2 b)
 }
 BASEVEC2 emu_mul(BASEVEC2 a, BASEFLOAT b)
 {
-    PRECISE BASEVEC2 p = two_mul(BASEVEC2(a.x, b));
+    precise BASEVEC2 p = two_mul(BASEVEC2(a.x, b));
     p.y += a.y * b;
-    PRECISE BASEVEC2 r = quick_two_add(p.x, p.y);
+    precise BASEVEC2 r = quick_two_add(p.x, p.y);
     return r;
 }
 BASEVEC2 emu_mul(BASEVEC2 a, BASEVEC2 b)
 {
-    PRECISE BASEVEC2 p = two_mul(BASEVEC2(a.x, b.x));
+    precise BASEVEC2 p = two_mul(BASEVEC2(a.x, b.x));
     p.y += dot(a, b.yx);
-    PRECISE BASEVEC2 r = quick_two_add(p.x, p.y);
+    precise BASEVEC2 r = quick_two_add(p.x, p.y);
     return r;
 }
 BASEVEC2 emu_div(BASEVEC2 a, BASEVEC2 b)
 {
-    PRECISE BASEFLOAT q0 = a.x / b.x;
-    PRECISE BASEVEC2 r = emu_sub(a, emu_mul(b, q0));
-    PRECISE BASEFLOAT q1 = r.x / b.x;
+    precise BASEFLOAT q0 = a.x / b.x;
+    precise BASEVEC2 r = emu_sub(a, emu_mul(b, q0));
+    precise BASEFLOAT q1 = r.x / b.x;
     r = emu_sub(r, emu_mul(b, q1));
-    PRECISE BASEFLOAT q2 = r.x / b.x;
+    precise BASEFLOAT q2 = r.x / b.x;
     r = emu_add(quick_two_add(q0, q1), q2);
     return r;
 }
 BASEVEC2 emu_sqr(BASEFLOAT a)
 {
-    PRECISE BASEVEC2 p = two_sqr(a);
-    PRECISE BASEVEC2 r = quick_two_add(p.x, p.y);
+    precise BASEVEC2 p = two_sqr(a);
+    precise BASEVEC2 r = quick_two_add(p.x, p.y);
     return r;
 }
 BASEVEC2 emu_sqr(BASEVEC2 a)
 {
-    PRECISE BASEVEC2 p = two_sqr(a.x);
+    precise BASEVEC2 p = two_sqr(a.x);
     p.y += BASEFLOAT(2) * a.x * a.y;
-    PRECISE BASEVEC2 s = quick_two_add(p.x, p.y);
+    precise BASEVEC2 s = quick_two_add(p.x, p.y);
     return s;
 }
 BASEVEC2 emu_sqrt(BASEVEC2 a)
 {
-    PRECISE BASEFLOAT x = inversesqrt(a.x);
-    PRECISE BASEFLOAT ax = a.x * x;
-    PRECISE BASEFLOAT diff = emu_sub(a, emu_sqr(ax)).x;
-    PRECISE BASEFLOAT prod = diff * x * BASEFLOAT(0.5);
-    PRECISE BASEVEC2 r = two_add(prod, ax);
+    precise BASEFLOAT x = inversesqrt(a.x);
+    precise BASEFLOAT ax = a.x * x;
+    precise BASEFLOAT diff = emu_sub(a, emu_sqr(ax)).x;
+    precise BASEFLOAT prod = diff * x * BASEFLOAT(0.5);
+    precise BASEVEC2 r = two_add(prod, ax);
     return r;
 }
 

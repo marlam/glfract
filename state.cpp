@@ -165,7 +165,7 @@ void State::save(const QString& filename) const
     settings.endGroup();
 }
 
-void State::load(const QString& filename, bool enable_double_based_precisions)
+void State::load(const QString& filename)
 {
     QSettings settings(filename, QSettings::IniFormat);
     State defaults;
@@ -205,11 +205,11 @@ void State::load(const QString& filename, bool enable_double_based_precisions)
     tmp = settings.value("type").toString();
     if (tmp == "native_float")
         precision.type = precision_native_float;
-    else if (tmp == "native_double" && enable_double_based_precisions)
+    else if (tmp == "native_double")
         precision.type = precision_native_double;
     else if (tmp == "emu_doublefloat")
         precision.type = precision_emu_doublefloat;
-    else if (tmp == "emu_doubledouble" && enable_double_based_precisions)
+    else if (tmp == "emu_doubledouble")
         precision.type = precision_emu_doubledouble;
     settings.endGroup();
 
