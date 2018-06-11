@@ -20,6 +20,6 @@ these do not work with many OpenGL implementations.
     shader)
 
 Coloring is based on user-defined color maps (e.g. created with 
-[gencolormap](https://github.com/marlam/gencolormap)) and can be animated.
+[gencolormap](https://gitlab.marlam.de/marlam/gencolormap)) and can be animated.
 
-![GUI screen shot](https://raw.githubusercontent.com/marlam/glfract/master/screenshot.png)
+![GUI screen shot](https://gitlab.marlam.de/marlam/glfract/raw/master/screenshot.png)
