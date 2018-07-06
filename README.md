@@ -15,12 +15,12 @@ these do not work with many OpenGL implementations.
   * Mesa 11.0 i965 on Sandybridge Mobile
   * Mesa 11.0 llvmpipe (`LIBGL_ALWAYS_SOFTWARE=1`)
   * Mesa 18.1.3 llvmpipe (`LIBGL_ALWAYS_SOFTWARE=1`)
+  * Mesa 18.1.3 softpipe (`LIBGL_ALWAYS_SOFTWARE=1` `GALLIUM_DRIVER=softpipe`)
 * Known not to work:
   * Mesa 11.0 i965 on Bay Trail (strange artifacts)
   * Mesa 18.1.3 i965 on Kaby Lake U (strange artifacts, same as above)
   * NVIDIA proprietary drivers, any version (no additional precision; apparently
-    the `precise` keyword from `GL_ARB_gpu_shader5` is ignored in the fragment
-    shader)
+    the driver ignores the `precise` keyword from `GL_ARB_gpu_shader5`)
 
 Coloring is based on user-defined color maps (e.g. created with 
 [gencolormap](https://gitlab.marlam.de/marlam/gencolormap)) and can be animated.
