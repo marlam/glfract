@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, 2016  Martin Lambers <marlam@marlam.de>
+ * Copyright (C) 2015, 2016, 2017, 2018  Martin Lambers <marlam@marlam.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -72,7 +72,7 @@ public:
     State();
 
     void save(const QString& filename) const;
-    void load(const QString& filename);
+    void load(const QString& filename, bool enable_double_based_precisions);
 };
 
 #endif

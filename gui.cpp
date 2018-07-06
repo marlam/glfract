@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, 2016  Martin Lambers <marlam@marlam.de>
+ * Copyright (C) 2015, 2016, 2017, 2018  Martin Lambers <marlam@marlam.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -166,6 +166,8 @@ void GUI::activate()
     // GUI state
     show();
     state_to_gui();
+    precision_double_hw_btn->setEnabled(glwidget->have_arb_gpu_shader_fp64);
+    precision_quad_emu_btn->setEnabled(glwidget->have_arb_gpu_shader_fp64);
     connect(mandelbrot_power_spinbox, SIGNAL(valueChanged(int)), this, SLOT(update()));
     connect(mandelbrot_max_iter_spinbox, SIGNAL(valueChanged(int)), this, SLOT(update()));
     connect(mandelbrot_bailout_spinbox, SIGNAL(valueChanged(double)), this, SLOT(update()));
@@ -359,7 +361,7 @@ void GUI::file_open(const QString& file_name)
         name = file_name;
     }
     if (!name.isEmpty()) {
-        state.load(name);
+        state.load(name, glwidget->have_arb_gpu_shader_fp64);
         glwidget->state_has_new_colormap();
         state_to_gui();
         update();
@@ -397,7 +399,7 @@ void GUI::help_about()
 {
     QMessageBox::about(this, "About",
                 "<p><a href=\"https://github.com/marlam/glfract\">glfract</a> version 0.1</p>"
-                "<p>Copyright (C) 2016 Martin Lambers<br>"
+                "<p>Copyright (C) 2015 Martin Lambers<br>"
                 "   This is free software under the terms of the "
                     "<a href=\"http://www.gnu.org/licenses/gpl.html\">GPL version 3</a> or later. "
                 "   There is NO WARRANTY, to the extent permitted by law."
@@ -417,7 +419,7 @@ int main(int argc, char* argv[])
     }
 
     QSurfaceFormat format;
-    format.setVersion(4, 0);
+    format.setVersion(3, 3);
     format.setProfile(QSurfaceFormat::CoreProfile);
     QSurfaceFormat::setDefaultFormat(format);
 

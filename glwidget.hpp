@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, 2016  Martin Lambers <marlam@marlam.de>
+ * Copyright (C) 2015, 2016, 2017, 2018  Martin Lambers <marlam@marlam.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,16 +19,20 @@
 #define GLWIDGET_HPP
 
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions_4_0_Core>
+#include <QOpenGLFunctions_3_3_Core>
 
 #include "state.hpp"
 
 class QOpenGLShaderProgram;
 class QElapsedTimer;
 
-class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions_4_0_Core
+class GLWidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
 Q_OBJECT
+public:
+    bool have_arb_gpu_shader_fp64;
+    bool have_arb_gpu_shader5;
+
 private:
     // The state to render next
     State _state;
@@ -56,6 +60,9 @@ private:
     GLuint _fractal_fbo;
     GLuint _fractal_tex;
     GLuint _colormap_tex;
+    // GL extensions that are not available via QOpenGLFunctions_3_3_Core
+    void (*glUniform1d)(GLint location, GLdouble v0);
+    void (*glUniform2d)(GLint location, GLdouble v0, GLdouble v1);
 
 public:
     GLWidget();
