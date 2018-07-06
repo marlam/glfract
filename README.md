@@ -10,13 +10,16 @@ The fractals are computed on the GPU using one of the following precisions:
 
 The main feature are the 2x single or double precision modes, but unfortunately
 these do not work with many OpenGL implementations.
+
 * Known to work:
-  * Mesa 11.0 on Intel Sandybridge Mobile
-  * Mesa 11.0 llvmpipe (tested with `LIBGL_ALWAYS_SOFTWARE=y`)
+  * Mesa 11.0 i965 on Sandybridge Mobile
+  * Mesa 11.0 llvmpipe (`LIBGL_ALWAYS_SOFTWARE=1`)
+  * Mesa 18.1.3 llvmpipe (`LIBGL_ALWAYS_SOFTWARE=1`)
 * Known not to work:
-  * Mesa 11.0 on Intel Bay Trail (strange artifacts)
-  * NVIDIA proprietary drivers (no additional precision; apparently the
-    `precise` keyword from `GL_ARB_gpu_shader5` is ignored in the fragment
+  * Mesa 11.0 i965 on Bay Trail (strange artifacts)
+  * Mesa 18.1.3 i965 on Kaby Lake U (strange artifacts, same as above)
+  * NVIDIA proprietary drivers, any version (no additional precision; apparently
+    the `precise` keyword from `GL_ARB_gpu_shader5` is ignored in the fragment
     shader)
 
 Coloring is based on user-defined color maps (e.g. created with 
