@@ -1,1 +1,1 @@
-This project moved to <https://gitlab.marlam.de/marlam/glfract>
+This project moved to <https://marlam.de/glfract>
