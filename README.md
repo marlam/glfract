@@ -3,6 +3,7 @@
 This is an experimental program to explore Mandelbrot fractal set images.
 
 The fractals are computed on the GPU using one of the following precisions:
+
 - single precision
 - extended precision based on 2x single precision
 - double precision
@@ -23,6 +24,6 @@ these do not work with many OpenGL implementations.
     the driver ignores the `precise` keyword from `GL_ARB_gpu_shader5`)
 
 Coloring is based on user-defined color maps (e.g. created with 
-[gencolormap](https://gitlab.marlam.de/marlam/gencolormap)) and can be animated.
+[gencolormap](https://git.marlam.de/gitweb/?p=gencolormap.git)) and can be animated.
 
-![GUI screen shot](https://gitlab.marlam.de/marlam/glfract/raw/master/screenshot.png)
+![GUI screen shot](https://git.marlam.de/gitweb/?p=glfract.git;a=blob_plain;f=screenshot.png;hb=HEAD)
