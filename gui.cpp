@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2015, 2016, 2017, 2018  Martin Lambers <marlam@marlam.de>
+ * Copyright (C) 2015, 2016, 2017, 2018, 2019
+ * Martin Lambers <marlam@marlam.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -398,8 +399,8 @@ void GUI::edit_copy()
 void GUI::help_about()
 {
     QMessageBox::about(this, "About",
-                "<p><a href=\"https://github.com/marlam/glfract\">glfract</a> version 0.1</p>"
-                "<p>Copyright (C) 2015 Martin Lambers<br>"
+                "<p><a href=\"https://github.com/marlam/glfract\">glfract</a> version 0.2</p>"
+                "<p>Copyright (C) 2019 Martin Lambers<br>"
                 "   This is free software under the terms of the "
                     "<a href=\"http://www.gnu.org/licenses/gpl.html\">GPL version 3</a> or later. "
                 "   There is NO WARRANTY, to the extent permitted by law."
