@@ -9,19 +9,25 @@ The fractals are computed on the GPU using one of the following precisions:
 - double precision
 - extended precision based on 2x double precision
 
-The main feature are the 2x single or double precision modes, but unfortunately
-these do not work with many OpenGL implementations.
+The main feature are the 2x single or double precision modes. The 2x single
+precision mode produces results that are comparable with double precision mode,
+but uses only single precision machine instructions and is therefore much
+faster.
+
+Unforunately the 2x precision modes to not work with all OpenGL implementations.
+The main problem seems to be that some drivers to not correctly implement the
+`precise` keyword from the `GL_ARB_gpu_shader5` extension.
 
 * Known to work:
   * Mesa 19.3.1 llvmpipe and i965 on Intel Kaby Lake
   * Mesa 18.1.3 llvmpipe and softpipe
   * Mesa 11.0 i965 on Sandybridge Mobile
   * Mesa 11.0 llvmpipe
+  * NVIDIA proprietary drivers 440.59
 * Known not to work:
+  * NVIDIA proprietary drivers older than ca. 440.x
   * Mesa 18.1.3 i965 on Intel Kaby Lake (strange artifacts)
   * Mesa 11.0 i965 on Bay Trail (strange artifacts)
-  * NVIDIA proprietary drivers, any version (no additional precision; apparently
-    the driver ignores the `precise` keyword from `GL_ARB_gpu_shader5`)
 
 Coloring is based on user-defined color maps (e.g. created with 
 [gencolormap](https://marlam.de/gencolormap)) and can be animated.
