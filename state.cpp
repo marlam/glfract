@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2015, 2016, 2017, 2018  Martin Lambers <marlam@marlam.de>
+ * Copyright (C) 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022
+ * Martin Lambers <marlam@marlam.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -99,7 +100,6 @@ void State::save(const QString& filename) const
 {
     char buf[64];
     QSettings settings(filename, QSettings::IniFormat);
-    settings.setIniCodec("UTF-8");
 
     settings.beginGroup("fractal");
     switch (fractal.type) {

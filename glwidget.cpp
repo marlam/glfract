@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2015, 2016, 2017, 2018  Martin Lambers <marlam@marlam.de>
+ * Copyright (C) 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022
+ * Martin Lambers <marlam@marlam.de>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,6 +23,7 @@
 #include <QElapsedTimer>
 #include <QKeyEvent>
 #include <QMouseEvent>
+#include <QFile>
 
 #include <quadmath.h>
 
@@ -361,7 +363,7 @@ void GLWidget::mousePressEvent(QMouseEvent* event)
         _zoom_in = true;
         _zoom_out = false;
         _shift = false;
-    } else if (event->buttons() & Qt::MidButton) {
+    } else if (event->buttons() & Qt::MiddleButton) {
         _zoom_in = false;
         _zoom_out = false;
         _shift_start_x0 = _x0;
@@ -386,7 +388,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
 {
     _navig_event_x = event->pos().x();
     _navig_event_y = event->pos().y();
-    if (event->buttons() & Qt::MidButton)
+    if (event->buttons() & Qt::MiddleButton)
         _shift = true;
     update();
 }
