@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022
+ * Copyright (C) 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023
  * Martin Lambers <marlam@marlam.de>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -143,6 +143,10 @@ void GLWidget::state_has_new_colormap()
 
 void GLWidget::paintGL()
 {
+    // Support for HighDPUI output
+    int w = width() * devicePixelRatioF();
+    int h = height() * devicePixelRatioF();
+
     // Colormap animation timing. Always done at start of drawing in the hope
     // of getting regular results.
     qint64 animation_nsecs = 0;
@@ -194,8 +198,8 @@ void GLWidget::paintGL()
     glBindTexture(GL_TEXTURE_2D, _fractal_tex);
     glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &fractal_tex_width);
     glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &fractal_tex_height);
-    if (reinitialize_everything || fractal_tex_width != width() || fractal_tex_height != height()) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, width(), height(), 0, GL_RED, GL_FLOAT, NULL);
+    if (reinitialize_everything || fractal_tex_width != w || fractal_tex_height != h) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R32F, w, h, 0, GL_RED, GL_FLOAT, NULL);
         glBindFramebuffer(GL_FRAMEBUFFER, _fractal_fbo);
         glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, _fractal_tex, 0);
     }
@@ -210,8 +214,8 @@ void GLWidget::paintGL()
     float new_zoom = _state.navigation.zoom;
     if (_zoom_in || _zoom_out || _shift) {
         if (_zoom_in || _zoom_out) {
-            float fx = (_navig_event_x + 0.5f) / width();
-            float fy = 1.0f - ((_navig_event_y + 0.5f) / height());
+            float fx = (_navig_event_x + 0.5f) / w;
+            float fy = 1.0f - ((_navig_event_y + 0.5f) / h);
             __float128 zoom_dir = (_zoom_in ? +1 : -1);
             new_zoom = _state.navigation.zoom + zoom_dir * _zoom_step * _state.navigation.zoom;
             __float128 new_xw = _xw / (1.0Q + zoom_dir * _zoom_step);
@@ -224,8 +228,8 @@ void GLWidget::paintGL()
             _yw = new_yw;
         }
         if (_shift) {
-            __float128 dx = (_navig_start_x - _navig_event_x) * _xw / width();
-            __float128 dy = (_navig_event_y - _navig_start_y) * _yw / height();
+            __float128 dx = (_navig_start_x - _navig_event_x) * _xw / w;
+            __float128 dy = (_navig_event_y - _navig_start_y) * _yw / h;
             _x0 = _shift_start_x0 + dx;
             _y0 = _shift_start_y0 + dy;
             _shift = false;
@@ -236,7 +240,7 @@ void GLWidget::paintGL()
         emit navigate(_state.navigation.x, _state.navigation.y, _state.navigation.zoom);
     }
     __float128 fractal_ar = _state.fractal.mandelbrot.xw / _state.fractal.mandelbrot.yw;
-    __float128 viewport_ar = static_cast<__float128>(width()) / height();
+    __float128 viewport_ar = static_cast<__float128>(w) / h;
     if (viewport_ar >= fractal_ar) {
         _xw = _state.fractal.mandelbrot.xw / _state.navigation.zoom;
         _yw = _xw / viewport_ar;
@@ -324,7 +328,7 @@ void GLWidget::paintGL()
 
 void GLWidget::resizeGL(int w, int h)
 {
-    glViewport(0, 0, w, h);
+    glViewport(0, 0, w * devicePixelRatioF(), h * devicePixelRatioF());
 }
 
 void GLWidget::keyPressEvent(QKeyEvent* event)
@@ -357,8 +361,8 @@ void GLWidget::keyPressEvent(QKeyEvent* event)
 
 void GLWidget::mousePressEvent(QMouseEvent* event)
 {
-    _navig_start_x = _navig_event_x = event->pos().x();
-    _navig_start_y = _navig_event_y = event->pos().y();
+    _navig_start_x = _navig_event_x = event->pos().x() * devicePixelRatioF();
+    _navig_start_y = _navig_event_y = event->pos().y() * devicePixelRatioF();
     if (event->buttons() & Qt::LeftButton) {
         _zoom_in = true;
         _zoom_out = false;
@@ -386,8 +390,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* /* event */)
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)
 {
-    _navig_event_x = event->pos().x();
-    _navig_event_y = event->pos().y();
+    _navig_event_x = event->pos().x() * devicePixelRatioF();
+    _navig_event_y = event->pos().y() * devicePixelRatioF();
     if (event->buttons() & Qt::MiddleButton)
         _shift = true;
     update();
