@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022
+ * Copyright (C) 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023
  * Martin Lambers <marlam@marlam.de>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -113,13 +113,13 @@ void State::save(const QString& filename) const
     settings.setValue("bailout", QString::number(fractal.mandelbrot.bailout));
     settings.setValue("smooth", fractal.mandelbrot.smooth);
     quadmath_snprintf(buf, sizeof(buf), "%.36Qg", fractal.mandelbrot.x0);
-    settings.setValue("x0", buf);
+    settings.setValue("x0", QString(buf));
     quadmath_snprintf(buf, sizeof(buf), "%.36Qg", fractal.mandelbrot.xw);
-    settings.setValue("xw", buf);
+    settings.setValue("xw", QString(buf));
     quadmath_snprintf(buf, sizeof(buf), "%.36Qg", fractal.mandelbrot.y0);
-    settings.setValue("y0", buf);
+    settings.setValue("y0", QString(buf));
     quadmath_snprintf(buf, sizeof(buf), "%.36Qg", fractal.mandelbrot.yw);
-    settings.setValue("yw", buf);
+    settings.setValue("yw", QString(buf));
     settings.endGroup();
     settings.endGroup();
 
@@ -157,11 +157,11 @@ void State::save(const QString& filename) const
 
     settings.beginGroup("navigation");
     quadmath_snprintf(buf, sizeof(buf), "%.36Qg", navigation.x);
-    settings.setValue("x", buf);
+    settings.setValue("x", QString(buf));
     quadmath_snprintf(buf, sizeof(buf), "%.36Qg", navigation.y);
-    settings.setValue("y", buf);
+    settings.setValue("y", QString(buf));
     quadmath_snprintf(buf, sizeof(buf), "%.36Qg", navigation.zoom);
-    settings.setValue("zoom", buf);
+    settings.setValue("zoom", QString(buf));
     settings.endGroup();
 }
 
